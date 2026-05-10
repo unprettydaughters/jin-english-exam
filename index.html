@@ -10,23 +10,30 @@
         .container { background: var(--surface); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 800px; width: 100%; }
         h1 { text-align: center; color: var(--primary); font-size: 1.5rem; margin-bottom: 20px; }
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab { flex: 1; padding: 10px; border: none; border-radius: 8px; background: #E5E7EB; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .tab { flex: 1; padding: 10px; border: none; border-radius: 8px; background: #E5E7EB; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 0.9rem; }
         .tab.active { background: var(--primary); color: white; }
         .question-box { margin-bottom: 20px; font-size: 1.2rem; font-weight: 500; min-height: 40px; }
         .ko-hint { font-size: 0.9rem; color: #6B7280; margin-bottom: 10px; }
-        
+
         /* 순서 맞추기 UI */
         .drop-zone { min-height: 60px; border: 2px dashed #D1D5DB; border-radius: 8px; padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
         .word-bank { display: flex; flex-wrap: wrap; gap: 8px; }
         .word-chip { padding: 8px 12px; background: white; border: 1px solid #D1D5DB; border-radius: 20px; cursor: pointer; user-select: none; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .word-chip:hover { border-color: var(--primary); }
-        
-        /* 4지 선다 UI */
+
+        /* 4지 선다 / 문법 UI */
         .mcq-options { display: flex; flex-direction: column; gap: 10px; }
         .mcq-option { padding: 15px; border: 1px solid #D1D5DB; border-radius: 8px; background: white; cursor: pointer; text-align: left; transition: 0.2s; }
         .mcq-option:hover { border-color: var(--primary); background: #F8FAFC; }
         .mcq-option.selected { border-color: var(--primary); background: #EEF2FF; }
-        
+
+        /* 문법 문제 UI */
+        .grammar-sentence { font-size: 1.15rem; font-weight: 500; margin-bottom: 8px; line-height: 1.8; }
+        .blank { display: inline-block; min-width: 80px; border-bottom: 2px solid var(--primary); color: var(--primary); font-weight: bold; text-align: center; padding: 0 4px; }
+        .grammar-ko { font-size: 0.9rem; color: #6B7280; margin-bottom: 6px; }
+        .grammar-point { font-size: 0.82rem; color: #9CA3AF; margin-bottom: 16px; }
+        .explanation { margin-top: 10px; font-size: 0.9rem; color: #374151; background: #F3F4F6; border-radius: 8px; padding: 10px 14px; }
+
         .controls { display: flex; justify-content: space-between; margin-top: 20px; }
         button.action-btn { padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
         button.action-btn:disabled { background: #9CA3AF; cursor: not-allowed; }
@@ -39,10 +46,11 @@
 
 <div class="container">
     <h1>이진의 중간고사 영어 시험대비 페이지</h1>
-    
+
     <div class="tabs">
-        <button class="tab active" onclick="setMode('unscramble')">문장 순서 맞추기</button>
-        <button class="tab" onclick="setMode('mcq')">4지 선다 영작</button>
+        <button class="tab active" onclick="setMode('unscramble', this)">문장 순서 맞추기</button>
+        <button class="tab" onclick="setMode('mcq', this)">4지 선다 영작</button>
+        <button class="tab" onclick="setMode('grammar', this)">영문법 문제</button>
     </div>
 
     <div id="game-area"></div>
@@ -55,7 +63,6 @@
 </div>
 
 <script>
-    // 전체 문장 데이터를 여기에 추가하십시오. (현재 교과서 핵심 문장 10개 샘플 탑재)
     const db = [
         { en: "I enjoy the beauty of the stars each time I take out my telescope.", ko: "망원경을 꺼낼 때마다 별의 아름다움을 즐깁니다." },
         { en: "When I was 10, my parents gave me a telescope for my birthday, so I started observing the sky from my window.", ko: "내가 10살 때, 부모님이 생일 선물로 망원경을 주셔서 창문으로 하늘을 관찰하기 시작했습니다." },
@@ -69,6 +76,79 @@
         { en: "Sharing your concerns and asking for advice or comfort from others can help relieve stress.", ko: "고민을 나누고 다른 사람에게 조언이나 위로를 구하는 것은 스트레스 해소에 도움이 될 수 있습니다." }
     ];
 
+    const grammarDb = [
+        {
+            before: "I", blank: "enjoy", after: "the beauty of the stars each time I take out my telescope.",
+            ko: "망원경을 꺼낼 때마다 별의 아름다움을 ___ 합니다.",
+            point: "문법 포인트: 동사의 시제 (반복·습관)",
+            options: ["enjoy", "enjoyed", "am enjoying", "have enjoyed"],
+            explanation: "습관적으로 반복되는 사실은 현재 단순 시제(enjoy)를 씁니다."
+        },
+        {
+            before: "When I was 10, my parents", blank: "gave", after: "me a telescope for my birthday.",
+            ko: "내가 10살 때, 부모님이 생일 선물로 망원경을 ___ 습니다.",
+            point: "문법 포인트: 시제 일치 (과거)",
+            options: ["gave", "give", "have given", "are giving"],
+            explanation: "When절에 과거 시제(was)가 있으므로 주절도 과거 시제(gave)를 씁니다."
+        },
+        {
+            before: "During the 2020 lockdown, I focused more", blank: "on", after: "stargazing.",
+            ko: "봉쇄 기간 동안 나는 별 보기에 더 집중했습니다. (전치사)",
+            point: "문법 포인트: focus + 전치사",
+            options: ["on", "at", "in", "for"],
+            explanation: "focus on: ~에 집중하다. 전치사 on이 필요합니다."
+        },
+        {
+            before: "I really love doing blueprint photography", blank: "because", after: "it's a fascinating way to create images.",
+            ko: "나는 청사진 사진술을 정말 좋아합니다. ___ 그것은 매력적인 방식이기 때문입니다.",
+            point: "문법 포인트: 이유의 접속사",
+            options: ["because", "although", "unless", "however"],
+            explanation: "뒤 절이 이유를 나타내므로 접속사 because(~이기 때문에)가 알맞습니다."
+        },
+        {
+            before: "I was thrilled", blank: "to find", after: "how natural objects become beautiful through blueprint photography.",
+            ko: "자연물이 얼마나 아름다워지는지 알게 되어 매우 기뻤습니다.",
+            point: "문법 포인트: 감정 형용사 + to부정사",
+            options: ["to find", "finding", "found", "find"],
+            explanation: "thrilled(감정 형용사) 뒤에 원인을 나타내는 to부정사(to find)가 옵니다."
+        },
+        {
+            before: "In my art class, I was captivated", blank: "by", after: "the golden ratio.",
+            ko: "미술 시간에 나는 황금비에 매료되었습니다. (전치사)",
+            point: "문법 포인트: 수동태 + 전치사",
+            options: ["by", "with", "from", "of"],
+            explanation: "수동태에서 동작의 원인·행위자 앞에는 전치사 by를 씁니다."
+        },
+        {
+            before: "", blank: "Recognizing", after: "the cause can help you develop the right strategies to manage stress.",
+            ko: "원인을 ___ 것은 올바른 전략을 세우는 데 도움이 됩니다.",
+            point: "문법 포인트: 동명사 주어",
+            options: ["Recognizing", "Recognize", "Recognition", "Recognized"],
+            explanation: "동사가 문장의 주어 역할을 할 때는 동명사(-ing) 형태를 씁니다."
+        },
+        {
+            before: "Why don't you try", blank: "creating", after: "a to-do list and assign time for different activities?",
+            ko: "할 일 목록을 ___ 보는 것은 어떨까요?",
+            point: "문법 포인트: try + 동명사",
+            options: ["creating", "create", "created", "to creating"],
+            explanation: "try + -ing: 시험 삼아 ~해 보다. try 뒤에 동명사(-ing)가 옵니다."
+        },
+        {
+            before: "Sharing your concerns can help", blank: "relieve", after: "stress.",
+            ko: "고민을 나누는 것은 스트레스를 ___ 데 도움이 됩니다.",
+            point: "문법 포인트: help + 동사원형",
+            options: ["relieve", "relieving", "to relieving", "relieved"],
+            explanation: "help + 동사원형(또는 to부정사): ~하는 데 도움이 되다. 동사원형(relieve)이 알맞습니다."
+        },
+        {
+            before: "Recognizing the cause can help you", blank: "develop", after: "the right strategies needed to manage stress.",
+            ko: "원인을 인식하는 것은 올바른 전략을 ___ 데 도움이 됩니다.",
+            point: "문법 포인트: help + 목적어 + 동사원형",
+            options: ["develop", "developing", "to developing", "developed"],
+            explanation: "help + 목적어 + 동사원형: ~가 ...하도록 돕다. 동사원형(develop)을 씁니다."
+        }
+    ];
+
     let currentMode = 'unscramble';
     let currentIndex = 0;
     let selectedMcqAnswer = null;
@@ -79,16 +159,15 @@
         return array.sort(() => Math.random() - 0.5);
     }
 
-    function setMode(mode) {
+    function setMode(mode, btn) {
         currentMode = mode;
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        event.target.classList.add('active');
+        btn.classList.add('active');
         currentIndex = 0;
         loadQuestion();
     }
 
     function loadQuestion() {
-        const data = db[currentIndex];
         const gameArea = document.getElementById('game-area');
         document.getElementById('feedback').innerText = '';
         document.getElementById('next-btn').style.display = 'none';
@@ -96,9 +175,9 @@
         document.getElementById('check-btn').disabled = false;
 
         if (currentMode === 'unscramble') {
+            const data = db[currentIndex];
             originalWords = data.en.split(' ');
             unscrambleWords = shuffle([...originalWords]);
-            
             gameArea.innerHTML = `
                 <div class="ko-hint">${data.ko}</div>
                 <div class="drop-zone" id="drop-zone" onclick="moveToBank(event)"></div>
@@ -106,15 +185,31 @@
                     ${unscrambleWords.map((w, i) => `<div class="word-chip" data-id="${i}">${w}</div>`).join('')}
                 </div>
             `;
-        } else {
+        } else if (currentMode === 'mcq') {
+            const data = db[currentIndex];
             const wrongOptions = shuffle(db.filter((_, i) => i !== currentIndex)).slice(0, 3).map(d => d.en);
             const options = shuffle([data.en, ...wrongOptions]);
             selectedMcqAnswer = null;
-
             gameArea.innerHTML = `
                 <div class="question-box">${data.ko}</div>
                 <div class="mcq-options">
-                    ${options.map((opt, i) => `
+                    ${options.map(opt => `
+                        <button class="mcq-option" onclick="selectMcq(this, '${opt.replace(/'/g, "\\'")}')">${opt}</button>
+                    `).join('')}
+                </div>
+            `;
+        } else {
+            const g = grammarDb[currentIndex];
+            const opts = shuffle([...g.options]);
+            selectedMcqAnswer = null;
+            gameArea.innerHTML = `
+                <div class="grammar-sentence">
+                    ${g.before ? g.before + ' ' : ''}<span class="blank" id="blank-display">___</span>${g.after ? ' ' + g.after : ''}
+                </div>
+                <div class="grammar-ko">${g.ko}</div>
+                <div class="grammar-point">${g.point}</div>
+                <div class="mcq-options">
+                    ${opts.map(opt => `
                         <button class="mcq-option" onclick="selectMcq(this, '${opt.replace(/'/g, "\\'")}')">${opt}</button>
                     `).join('')}
                 </div>
@@ -141,16 +236,32 @@
     }
 
     function checkAnswer() {
-        const data = db[currentIndex];
         const feedback = document.getElementById('feedback');
         let isCorrect = false;
+        let speakText = '';
 
         if (currentMode === 'unscramble') {
+            const data = db[currentIndex];
             const currentSentence = Array.from(document.getElementById('drop-zone').children).map(c => c.innerText).join(' ');
             isCorrect = (currentSentence === data.en);
-        } else {
+            speakText = data.en;
+        } else if (currentMode === 'mcq') {
+            const data = db[currentIndex];
             if (!selectedMcqAnswer) return alert('답을 선택해주세요.');
             isCorrect = (selectedMcqAnswer === data.en);
+            speakText = data.en;
+        } else {
+            const g = grammarDb[currentIndex];
+            if (!selectedMcqAnswer) return alert('답을 선택해주세요.');
+            isCorrect = (selectedMcqAnswer === g.blank);
+            speakText = (g.before ? g.before + ' ' : '') + g.blank + (g.after ? ' ' + g.after : '');
+            const blankEl = document.getElementById('blank-display');
+            if (blankEl) blankEl.textContent = g.blank;
+            const expArea = document.getElementById('game-area');
+            const expDiv = document.createElement('div');
+            expDiv.className = 'explanation';
+            expDiv.textContent = '💡 ' + g.explanation;
+            expArea.appendChild(expDiv);
         }
 
         document.getElementById('check-btn').style.display = 'none';
@@ -159,14 +270,17 @@
         if (isCorrect) {
             feedback.innerHTML = '<span class="correct">정답입니다! 🎉</span>';
         } else {
-            feedback.innerHTML = `<span class="incorrect">틀렸습니다. 정답은:<br>${data.en}</span>`;
+            const g = currentMode === 'grammar' ? grammarDb[currentIndex] : null;
+            const correctLabel = g ? `정답: <b>${g.blank}</b>` : `정답은:<br>${db[currentIndex].en}`;
+            feedback.innerHTML = `<span class="incorrect">틀렸습니다. ${correctLabel}</span>`;
         }
 
-        speakEnglish(data.en);
+        speakEnglish(speakText);
     }
 
     function nextQuestion() {
-        currentIndex = (currentIndex + 1) % db.length;
+        const dbLen = currentMode === 'grammar' ? grammarDb.length : db.length;
+        currentIndex = (currentIndex + 1) % dbLen;
         loadQuestion();
     }
 
@@ -178,7 +292,6 @@
         speechSynthesis.speak(utter);
     }
 
-    // 초기 실행
     loadQuestion();
 </script>
 </body>
