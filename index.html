@@ -58,6 +58,7 @@
     <div class="feedback" id="feedback"></div>
     <div class="controls">
         <button class="action-btn" id="check-btn" onclick="checkAnswer()">정답 확인</button>
+        <button class="action-btn" id="replay-btn" onclick="replayTTS()" style="display:none;">🔊 한번 더 듣기</button>
         <button class="action-btn" id="next-btn" onclick="nextQuestion()" style="display:none;">다음 문제</button>
     </div>
 </div>
@@ -259,6 +260,7 @@
     let selectedMcqAnswer = null;
     let unscrambleWords = [];
     let originalWords = [];
+    let lastSpokenText = '';
 
     function shuffle(array) {
         return array.sort(() => Math.random() - 0.5);
@@ -276,6 +278,7 @@
         const gameArea = document.getElementById('game-area');
         document.getElementById('feedback').innerText = '';
         document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('replay-btn').style.display = 'none';
         document.getElementById('check-btn').style.display = 'block';
         document.getElementById('check-btn').disabled = false;
 
@@ -370,6 +373,7 @@
         }
 
         document.getElementById('check-btn').style.display = 'none';
+        document.getElementById('replay-btn').style.display = 'block';
         document.getElementById('next-btn').style.display = 'block';
 
         if (isCorrect) {
@@ -380,7 +384,12 @@
             feedback.innerHTML = `<span class="incorrect">틀렸습니다. ${correctLabel}</span>`;
         }
 
+        lastSpokenText = speakText;
         speakEnglish(speakText);
+    }
+
+    function replayTTS() {
+        if (lastSpokenText) speakEnglish(lastSpokenText);
     }
 
     function nextQuestion() {
