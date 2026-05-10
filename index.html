@@ -161,11 +161,21 @@
         } else {
             feedback.innerHTML = `<span class="incorrect">틀렸습니다. 정답은:<br>${data.en}</span>`;
         }
+
+        speakEnglish(data.en);
     }
 
     function nextQuestion() {
         currentIndex = (currentIndex + 1) % db.length;
         loadQuestion();
+    }
+
+    function speakEnglish(text) {
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'en-US';
+        utter.rate = 0.9;
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
     }
 
     // 초기 실행
