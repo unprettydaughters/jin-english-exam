@@ -261,16 +261,25 @@
     let unscrambleWords = [];
     let originalWords = [];
     let lastSpokenText = '';
+    let shuffledIndices = [];
+    let cyclePos = 0;
 
     function shuffle(array) {
         return array.sort(() => Math.random() - 0.5);
+    }
+
+    function initCycle() {
+        const len = currentMode === 'grammar' ? grammarDb.length : db.length;
+        shuffledIndices = shuffle([...Array(len).keys()]);
+        cyclePos = 0;
+        currentIndex = shuffledIndices[0];
     }
 
     function setMode(mode, btn) {
         currentMode = mode;
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         btn.classList.add('active');
-        currentIndex = 0;
+        initCycle();
         loadQuestion();
     }
 
@@ -393,8 +402,12 @@
     }
 
     function nextQuestion() {
-        const dbLen = currentMode === 'grammar' ? grammarDb.length : db.length;
-        currentIndex = (currentIndex + 1) % dbLen;
+        cyclePos++;
+        if (cyclePos >= shuffledIndices.length) {
+            initCycle();
+        } else {
+            currentIndex = shuffledIndices[cyclePos];
+        }
         loadQuestion();
     }
 
@@ -424,6 +437,7 @@
         }
     }
 
+    initCycle();
     loadQuestion();
 </script>
 </body>
