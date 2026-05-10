@@ -390,11 +390,29 @@
     }
 
     function speakEnglish(text) {
+        speechSynthesis.cancel();
         const utter = new SpeechSynthesisUtterance(text);
         utter.lang = 'en-US';
-        utter.rate = 0.9;
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
+        utter.rate = 0.85;
+        utter.pitch = 1;
+
+        const speak = () => {
+            const voices = speechSynthesis.getVoices();
+            const pick =
+                voices.find(v => v.name === 'Samantha') ||
+                voices.find(v => v.name === 'Alex') ||
+                voices.find(v => v.lang === 'en-US' && v.localService) ||
+                voices.find(v => v.lang.startsWith('en-'));
+            if (pick) utter.voice = pick;
+            speechSynthesis.speak(utter);
+        };
+
+        // iOS는 voices를 비동기로 로드하므로 준비될 때까지 대기
+        if (speechSynthesis.getVoices().length > 0) {
+            speak();
+        } else {
+            speechSynthesis.addEventListener('voiceschanged', speak, { once: true });
+        }
     }
 
     loadQuestion();
