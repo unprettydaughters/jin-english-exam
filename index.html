@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이진의 중간고사 영어 시험대비 페이지</title>
+    <style>
+        :root { --primary: #4F46E5; --bg: #F3F4F6; --surface: #FFFFFF; --text: #1F2937; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .container { background: var(--surface); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 800px; width: 100%; }
+        h1 { text-align: center; color: var(--primary); font-size: 1.5rem; margin-bottom: 20px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab { flex: 1; padding: 10px; border: none; border-radius: 8px; background: #E5E7EB; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .tab.active { background: var(--primary); color: white; }
+        .question-box { margin-bottom: 20px; font-size: 1.2rem; font-weight: 500; min-height: 40px; }
+        .ko-hint { font-size: 0.9rem; color: #6B7280; margin-bottom: 10px; }
+        
+        /* 순서 맞추기 UI */
+        .drop-zone { min-height: 60px; border: 2px dashed #D1D5DB; border-radius: 8px; padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 8px; }
+        .word-chip { padding: 8px 12px; background: white; border: 1px solid #D1D5DB; border-radius: 20px; cursor: pointer; user-select: none; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .word-chip:hover { border-color: var(--primary); }
+        
+        /* 4지 선다 UI */
+        .mcq-options { display: flex; flex-direction: column; gap: 10px; }
+        .mcq-option { padding: 15px; border: 1px solid #D1D5DB; border-radius: 8px; background: white; cursor: pointer; text-align: left; transition: 0.2s; }
+        .mcq-option:hover { border-color: var(--primary); background: #F8FAFC; }
+        .mcq-option.selected { border-color: var(--primary); background: #EEF2FF; }
+        
+        .controls { display: flex; justify-content: space-between; margin-top: 20px; }
+        button.action-btn { padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        button.action-btn:disabled { background: #9CA3AF; cursor: not-allowed; }
+        .feedback { font-weight: bold; text-align: center; margin-top: 15px; min-height: 24px; }
+        .correct { color: #10B981; }
+        .incorrect { color: #EF4444; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>이진의 중간고사 영어 시험대비 페이지</h1>
+    
+    <div class="tabs">
+        <button class="tab active" onclick="setMode('unscramble')">문장 순서 맞추기</button>
+        <button class="tab" onclick="setMode('mcq')">4지 선다 영작</button>
+    </div>
+
+    <div id="game-area"></div>
+
+    <div class="feedback" id="feedback"></div>
+    <div class="controls">
+        <button class="action-btn" id="check-btn" onclick="checkAnswer()">정답 확인</button>
+        <button class="action-btn" id="next-btn" onclick="nextQuestion()" style="display:none;">다음 문제</button>
+    </div>
+</div>
+
+<script>
+    // 전체 문장 데이터를 여기에 추가하십시오. (현재 교과서 핵심 문장 10개 샘플 탑재)
+    const db = [
+        { en: "I enjoy the beauty of the stars each time I take out my telescope.", ko: "망원경을 꺼낼 때마다 별의 아름다움을 즐깁니다." },
+        { en: "When I was 10, my parents gave me a telescope for my birthday, so I started observing the sky from my window.", ko: "내가 10살 때, 부모님이 생일 선물로 망원경을 주셔서 창문으로 하늘을 관찰하기 시작했습니다." },
+        { en: "During the 2020 lockdown, I focused more on stargazing and took beautiful photos of the Scottish skies and the stars.", ko: "2020년 봉쇄 기간 동안 나는 별 보기에 더 집중했고 스코틀랜드 하늘과 별들의 아름다운 사진을 찍었습니다." },
+        { en: "I really love doing blueprint photography because it's an old but fascinating way to create images.", ko: "청사진 사진술은 오래되었지만 매력적인 이미지 제작 방식이기 때문에 나는 그것을 정말 좋아합니다." },
+        { en: "I was thrilled to find how natural objects become beautiful and detailed through blueprint photography.", ko: "자연물이 청사진 사진술을 통해 얼마나 아름답고 섬세해지는지 알게 되어 매우 기뻤습니다." },
+        { en: "In my art class, I was captivated by the golden ratio.", ko: "미술 시간에 나는 황금비에 매료되었습니다." },
+        { en: "Identify the source of the stress.", ko: "스트레스의 원인을 파악하세요." },
+        { en: "Recognizing the cause can help you develop the right strategies needed to manage stress.", ko: "원인을 인식하는 것은 스트레스를 관리하는 데 필요한 올바른 전략을 세우는 데 도움이 될 수 있습니다." },
+        { en: "Why don't you try creating a to-do list and assign time for different activities?", ko: "할 일 목록을 만들고 다양한 활동에 시간을 할애해 보는 것은 어떨까요?" },
+        { en: "Sharing your concerns and asking for advice or comfort from others can help relieve stress.", ko: "고민을 나누고 다른 사람에게 조언이나 위로를 구하는 것은 스트레스 해소에 도움이 될 수 있습니다." }
+    ];
+
+    let currentMode = 'unscramble';
+    let currentIndex = 0;
+    let selectedMcqAnswer = null;
+    let unscrambleWords = [];
+    let originalWords = [];
+
+    function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    function setMode(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        currentIndex = 0;
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const data = db[currentIndex];
+        const gameArea = document.getElementById('game-area');
+        document.getElementById('feedback').innerText = '';
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('check-btn').style.display = 'block';
+        document.getElementById('check-btn').disabled = false;
+
+        if (currentMode === 'unscramble') {
+            originalWords = data.en.split(' ');
+            unscrambleWords = shuffle([...originalWords]);
+            
+            gameArea.innerHTML = `
+                <div class="ko-hint">${data.ko}</div>
+                <div class="drop-zone" id="drop-zone" onclick="moveToBank(event)"></div>
+                <div class="word-bank" id="word-bank" onclick="moveToDropZone(event)">
+                    ${unscrambleWords.map((w, i) => `<div class="word-chip" data-id="${i}">${w}</div>`).join('')}
+                </div>
+            `;
+        } else {
+            const wrongOptions = shuffle(db.filter((_, i) => i !== currentIndex)).slice(0, 3).map(d => d.en);
+            const options = shuffle([data.en, ...wrongOptions]);
+            selectedMcqAnswer = null;
+
+            gameArea.innerHTML = `
+                <div class="question-box">${data.ko}</div>
+                <div class="mcq-options">
+                    ${options.map((opt, i) => `
+                        <button class="mcq-option" onclick="selectMcq(this, '${opt.replace(/'/g, "\\'")}')">${opt}</button>
+                    `).join('')}
+                </div>
+            `;
+        }
+    }
+
+    function moveToDropZone(e) {
+        if (e.target.classList.contains('word-chip')) {
+            document.getElementById('drop-zone').appendChild(e.target);
+        }
+    }
+
+    function moveToBank(e) {
+        if (e.target.classList.contains('word-chip')) {
+            document.getElementById('word-bank').appendChild(e.target);
+        }
+    }
+
+    function selectMcq(btn, text) {
+        document.querySelectorAll('.mcq-option').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedMcqAnswer = text;
+    }
+
+    function checkAnswer() {
+        const data = db[currentIndex];
+        const feedback = document.getElementById('feedback');
+        let isCorrect = false;
+
+        if (currentMode === 'unscramble') {
+            const currentSentence = Array.from(document.getElementById('drop-zone').children).map(c => c.innerText).join(' ');
+            isCorrect = (currentSentence === data.en);
+        } else {
+            if (!selectedMcqAnswer) return alert('답을 선택해주세요.');
+            isCorrect = (selectedMcqAnswer === data.en);
+        }
+
+        if (isCorrect) {
+            feedback.innerHTML = '<span class="correct">정답입니다! 🎉</span>';
+            document.getElementById('check-btn').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'block';
+        } else {
+            feedback.innerHTML = `<span class="incorrect">틀렸습니다. 정답은:<br>${data.en}</span>`;
+        }
+    }
+
+    function nextQuestion() {
+        currentIndex = (currentIndex + 1) % db.length;
+        loadQuestion();
+    }
+
+    // 초기 실행
+    loadQuestion();
+</script>
+</body>
+</html>
