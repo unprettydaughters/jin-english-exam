@@ -203,6 +203,7 @@ let timerOn = false;
 let timerRemaining = 20;
 let timerInterval = null;
 const TIMER_SEC = 20;
+const TIMER_SEC_UNSCRAMBLE = 30;
 let timerExpired = false;
 
 // ── 유틸 ─────────────────────────────────────────────────────────────────────
@@ -431,7 +432,7 @@ function toggleTimer() {
 
 function startTimer() {
     stopTimer();
-    timerRemaining = TIMER_SEC;
+    timerRemaining = currentMode === 'unscramble' ? TIMER_SEC_UNSCRAMBLE : TIMER_SEC;
     timerExpired = false;
     updateTimerUI();
     timerInterval = setInterval(() => {
@@ -451,7 +452,8 @@ function stopTimer() {
 
 function updateTimerUI() {
     document.getElementById('timer-text').textContent = timerRemaining;
-    const pct  = (timerRemaining / TIMER_SEC) * 100;
+    const maxSec = currentMode === 'unscramble' ? TIMER_SEC_UNSCRAMBLE : TIMER_SEC;
+    const pct  = (timerRemaining / maxSec) * 100;
     const fill = document.getElementById('timer-fill');
     fill.style.width = pct + '%';
     fill.style.background = pct > 50 ? '#10B981' : pct > 25 ? '#F59E0B' : '#EF4444';
