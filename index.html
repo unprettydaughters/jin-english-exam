@@ -8,49 +8,96 @@
         :root { --primary: #4F46E5; --bg: #F3F4F6; --surface: #FFFFFF; --text: #1F2937; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .container { background: var(--surface); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 800px; width: 100%; }
-        h1 { text-align: center; color: var(--primary); font-size: 1.5rem; margin-bottom: 20px; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab { flex: 1; padding: 10px; border: none; border-radius: 8px; background: #E5E7EB; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 0.9rem; }
+        h1 { text-align: center; color: var(--primary); font-size: 1.5rem; margin-bottom: 16px; }
+
+        /* 단원 선택 */
+        .unit-selector { display: flex; gap: 8px; margin-bottom: 12px; }
+        .unit-btn { padding: 6px 18px; border: 2px solid var(--primary); border-radius: 20px; background: white; color: var(--primary); cursor: pointer; font-weight: bold; font-size: 0.9rem; transition: 0.2s; }
+        .unit-btn.active { background: var(--primary); color: white; }
+
+        /* 점수판 */
+        .score-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        #score-display { font-weight: bold; font-size: 0.9rem; color: #374151; }
+        .rate { font-weight: bold; font-size: 0.9rem; }
+        .rate-good { color: #10B981; }
+        .rate-mid { color: #F59E0B; }
+        .rate-bad { color: #EF4444; }
+        .timer-btn { margin-left: auto; padding: 5px 14px; border: none; border-radius: 20px; background: #E5E7EB; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: 0.2s; }
+        .timer-btn.on { background: #10B981; color: white; }
+
+        /* 타이머 바 */
+        #timer-wrap { display: none; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .timer-track { flex: 1; height: 10px; background: #E5E7EB; border-radius: 5px; overflow: hidden; }
+        .timer-fill { height: 100%; border-radius: 5px; transition: width 0.9s linear, background 0.3s; }
+        #timer-text { font-weight: bold; font-size: 1rem; min-width: 28px; text-align: right; }
+
+        /* 탭 */
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab { flex: 1; min-width: 90px; padding: 10px 6px; border: none; border-radius: 8px; background: #E5E7EB; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 0.85rem; }
         .tab.active { background: var(--primary); color: white; }
-        .question-box { margin-bottom: 20px; font-size: 1.2rem; font-weight: 500; min-height: 40px; }
+        .tab.wrong-tab { background: #FEF3C7; color: #92400E; }
+        .tab.wrong-tab.active { background: #F59E0B; color: white; }
+
+        /* 문제 */
+        .question-box { margin-bottom: 20px; font-size: 1.15rem; font-weight: 500; min-height: 40px; }
         .ko-hint { font-size: 0.9rem; color: #6B7280; margin-bottom: 10px; }
 
-        /* 순서 맞추기 UI */
+        /* 순서 맞추기 */
         .drop-zone { min-height: 60px; border: 2px dashed #D1D5DB; border-radius: 8px; padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
         .word-bank { display: flex; flex-wrap: wrap; gap: 8px; }
         .word-chip { padding: 8px 12px; background: white; border: 1px solid #D1D5DB; border-radius: 20px; cursor: pointer; user-select: none; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .word-chip:hover { border-color: var(--primary); }
 
-        /* 4지 선다 / 문법 UI */
+        /* 선다형 / 문법 */
         .mcq-options { display: flex; flex-direction: column; gap: 10px; }
         .mcq-option { padding: 15px; border: 1px solid #D1D5DB; border-radius: 8px; background: white; cursor: pointer; text-align: left; transition: 0.2s; }
         .mcq-option:hover { border-color: var(--primary); background: #F8FAFC; }
         .mcq-option.selected { border-color: var(--primary); background: #EEF2FF; }
 
-        /* 문법 문제 UI */
-        .grammar-sentence { font-size: 1.15rem; font-weight: 500; margin-bottom: 8px; line-height: 1.8; }
+        /* 문법 */
+        .grammar-sentence { font-size: 1.1rem; font-weight: 500; margin-bottom: 8px; line-height: 2; }
         .blank { display: inline-block; min-width: 80px; border-bottom: 2px solid var(--primary); color: var(--primary); font-weight: bold; text-align: center; padding: 0 4px; }
-        .grammar-ko { font-size: 0.9rem; color: #6B7280; margin-bottom: 6px; }
-        .grammar-point { font-size: 0.82rem; color: #9CA3AF; margin-bottom: 16px; }
-        .explanation { margin-top: 10px; font-size: 0.9rem; color: #374151; background: #F3F4F6; border-radius: 8px; padding: 10px 14px; }
+        .grammar-ko { font-size: 0.9rem; color: #6B7280; margin-bottom: 4px; }
+        .grammar-point { font-size: 0.82rem; color: #9CA3AF; margin-bottom: 14px; }
+        .explanation { margin-top: 10px; font-size: 0.88rem; color: #374151; background: #F3F4F6; border-radius: 8px; padding: 10px 14px; }
 
-        .controls { display: flex; justify-content: space-between; margin-top: 20px; }
+        /* 오답 노트 완료 */
+        .empty-state { text-align: center; padding: 40px; color: #6B7280; line-height: 2; }
+        .empty-state .emoji { font-size: 2.5rem; }
+
+        /* 하단 버튼 */
+        .controls { display: flex; justify-content: space-between; margin-top: 20px; gap: 8px; flex-wrap: wrap; }
         button.action-btn { padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        button.action-btn:disabled { background: #9CA3AF; cursor: not-allowed; }
         .feedback { font-weight: bold; text-align: center; margin-top: 15px; min-height: 24px; }
         .correct { color: #10B981; }
         .incorrect { color: #EF4444; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <h1>이진의 중간고사 영어 시험대비 페이지</h1>
+
+    <div class="unit-selector">
+        <button class="unit-btn active" onclick="setUnit(0, this)">1단원</button>
+        <button class="unit-btn" onclick="setUnit(1, this)">2단원</button>
+    </div>
+
+    <div class="score-bar">
+        <span id="score-display">✓ 0 / 0 문제</span>
+        <span class="rate" id="rate-display">정답률 -</span>
+        <button class="timer-btn" id="timer-btn" onclick="toggleTimer()">⏱️ 타이머 꺼짐</button>
+    </div>
+
+    <div id="timer-wrap">
+        <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:100%;background:#10B981"></div></div>
+        <span id="timer-text">20</span>초
+    </div>
 
     <div class="tabs">
         <button class="tab active" onclick="setMode('unscramble', this)">문장 순서 맞추기</button>
         <button class="tab" onclick="setMode('mcq', this)">4지 선다 영작</button>
         <button class="tab" onclick="setMode('grammar', this)">영문법 문제</button>
+        <button class="tab wrong-tab" id="wrong-tab" onclick="setMode('wrong', this)" style="display:none">오답 노트 (<span id="wrong-count">0</span>)</button>
     </div>
 
     <div id="game-area"></div>
@@ -58,387 +105,380 @@
     <div class="feedback" id="feedback"></div>
     <div class="controls">
         <button class="action-btn" id="check-btn" onclick="checkAnswer()">정답 확인</button>
-        <button class="action-btn" id="replay-btn" onclick="replayTTS()" style="display:none;">🔊 한번 더 듣기</button>
-        <button class="action-btn" id="next-btn" onclick="nextQuestion()" style="display:none;">다음 문제</button>
+        <button class="action-btn" id="replay-btn" onclick="replayTTS()" style="display:none">🔊 한번 더 듣기</button>
+        <button class="action-btn" id="next-btn" onclick="nextQuestion()" style="display:none">다음 문제</button>
     </div>
 </div>
 
 <script>
-    const db = [
-        { en: "I enjoy the beauty of the stars each time I take out my telescope.", ko: "망원경을 꺼낼 때마다 별의 아름다움을 즐깁니다." },
-        { en: "When I was 10, my parents gave me a telescope for my birthday, so I started observing the sky from my window.", ko: "내가 10살 때, 부모님이 생일 선물로 망원경을 주셔서 창문으로 하늘을 관찰하기 시작했습니다." },
-        { en: "During the 2020 lockdown, I focused more on stargazing and took beautiful photos of the Scottish skies and the stars.", ko: "2020년 봉쇄 기간 동안 나는 별 보기에 더 집중했고 스코틀랜드 하늘과 별들의 아름다운 사진을 찍었습니다." },
-        { en: "I really love doing blueprint photography because it's an old but fascinating way to create images.", ko: "청사진 사진술은 오래되었지만 매력적인 이미지 제작 방식이기 때문에 나는 그것을 정말 좋아합니다." },
-        { en: "I was thrilled to find how natural objects become beautiful and detailed through blueprint photography.", ko: "자연물이 청사진 사진술을 통해 얼마나 아름답고 섬세해지는지 알게 되어 매우 기뻤습니다." },
-        { en: "In my art class, I was captivated by the golden ratio.", ko: "미술 시간에 나는 황금비에 매료되었습니다." },
-        { en: "Identify the source of the stress.", ko: "스트레스의 원인을 파악하세요." },
-        { en: "Recognizing the cause can help you develop the right strategies needed to manage stress.", ko: "원인을 인식하는 것은 스트레스를 관리하는 데 필요한 올바른 전략을 세우는 데 도움이 될 수 있습니다." },
-        { en: "Why don't you try creating a to-do list and assign time for different activities?", ko: "할 일 목록을 만들고 다양한 활동에 시간을 할애해 보는 것은 어떨까요?" },
-        { en: "Sharing your concerns and asking for advice or comfort from others can help relieve stress.", ko: "고민을 나누고 다른 사람에게 조언이나 위로를 구하는 것은 스트레스 해소에 도움이 될 수 있습니다." }
-    ];
+// ── 1단원 데이터 ────────────────────────────────────────────────────────────
+const db1 = [
+    { en: "I enjoy the beauty of the stars each time I take out my telescope.", ko: "망원경을 꺼낼 때마다 별의 아름다움을 즐깁니다." },
+    { en: "When I was 10, my parents gave me a telescope for my birthday, so I started observing the sky from my window.", ko: "내가 10살 때, 부모님이 생일 선물로 망원경을 주셔서 창문으로 하늘을 관찰하기 시작했습니다." },
+    { en: "During the 2020 lockdown, I focused more on stargazing and took beautiful photos of the Scottish skies and the stars.", ko: "2020년 봉쇄 기간 동안 나는 별 보기에 더 집중했고 스코틀랜드 하늘과 별들의 아름다운 사진을 찍었습니다." },
+    { en: "I really love doing blueprint photography because it's an old but fascinating way to create images.", ko: "청사진 사진술은 오래되었지만 매력적인 이미지 제작 방식이기 때문에 나는 그것을 정말 좋아합니다." },
+    { en: "I was thrilled to find how natural objects become beautiful and detailed through blueprint photography.", ko: "자연물이 청사진 사진술을 통해 얼마나 아름답고 섬세해지는지 알게 되어 매우 기뻤습니다." },
+    { en: "In my art class, I was captivated by the golden ratio.", ko: "미술 시간에 나는 황금비에 매료되었습니다." },
+    { en: "Identify the source of the stress.", ko: "스트레스의 원인을 파악하세요." },
+    { en: "Recognizing the cause can help you develop the right strategies needed to manage stress.", ko: "원인을 인식하는 것은 스트레스를 관리하는 데 필요한 올바른 전략을 세우는 데 도움이 될 수 있습니다." },
+    { en: "Why don't you try creating a to-do list and assign time for different activities?", ko: "할 일 목록을 만들고 다양한 활동에 시간을 할애해 보는 것은 어떨까요?" },
+    { en: "Sharing your concerns and asking for advice or comfort from others can help relieve stress.", ko: "고민을 나누고 다른 사람에게 조언이나 위로를 구하는 것은 스트레스 해소에 도움이 될 수 있습니다." }
+];
 
-    const grammarDb = [
-        // ── 동명사 (6개) ──────────────────────────────────────────
-        {
-            before: "During the 2020 lockdown, I focused more on", blank: "stargazing",
-            after: "and took beautiful photos of the Scottish skies.",
-            ko: "봉쇄 기간 동안 나는 별 보기에 더 집중했습니다.",
-            point: "동명사 ① 전치사 + 동명사",
-            options: ["stargazing", "to stargaze", "stargaze", "stargazed"],
-            explanation: "전치사(on) 뒤에는 반드시 동명사(-ing)가 옵니다. to부정사는 올 수 없습니다."
-        },
-        {
-            before: "Why don't you try", blank: "creating",
-            after: "a to-do list and assign time for different activities?",
-            ko: "할 일 목록을 만들어 보는 것은 어떨까요?",
-            point: "동명사 ② try + 동명사",
-            options: ["creating", "create", "to creating", "created"],
-            explanation: "try + -ing: 시험 삼아 ~해 보다. try 뒤에 동명사(-ing)가 옵니다."
-        },
-        {
-            before: "", blank: "Recognizing",
-            after: "the cause can help you develop the right strategies needed to manage stress.",
-            ko: "원인을 인식하는 것은 올바른 전략을 세우는 데 도움이 됩니다.",
-            point: "동명사 ③ 동명사 주어",
-            options: ["Recognizing", "Recognize", "To recognizing", "Recognized"],
-            explanation: "동사가 문장의 주어 역할을 할 때는 동명사(-ing) 형태를 씁니다. 동명사 주어는 단수 취급합니다."
-        },
-        {
-            before: "", blank: "Sharing",
-            after: "your concerns and asking for advice from others can help relieve stress.",
-            ko: "고민을 나누는 것은 스트레스 해소에 도움이 됩니다.",
-            point: "동명사 ④ 동명사 주어 (and로 연결된 동명사)",
-            options: ["Sharing", "Share", "Shared", "To sharing"],
-            explanation: "Sharing ... and asking ...이 함께 주어 역할을 합니다. 동명사로 시작하는 주어는 단수 취급합니다."
-        },
-        {
-            before: "I really love", blank: "doing",
-            after: "blueprint photography because it's a fascinating way to create images.",
-            ko: "나는 청사진 사진술 하는 것을 정말 좋아합니다.",
-            point: "동명사 ⑤ love + 동명사 (목적어)",
-            options: ["doing", "do", "to doing", "done"],
-            explanation: "love + -ing: ~하는 것을 좋아하다. 이 문장은 동명사(doing)를 목적어로 씁니다."
-        },
-        {
-            before: "Sharing your concerns and asking", blank: "for",
-            after: "advice or comfort from others can help relieve stress.",
-            ko: "다른 사람에게 조언이나 위로를 구하는 것은 스트레스 해소에 도움이 됩니다.",
-            point: "동명사 ⑥ 동명사 + 전치사 (ask for)",
-            options: ["for", "of", "to", "about"],
-            explanation: "ask for: ~을 요청하다/구하다. 동명사(asking) 뒤에 오는 전치사는 for입니다."
-        },
-        // ── to부정사 (4개) ────────────────────────────────────────
-        {
-            before: "I was thrilled", blank: "to find",
-            after: "how natural objects become beautiful through blueprint photography.",
-            ko: "자연물이 얼마나 아름다워지는지 알게 되어 매우 기뻤습니다.",
-            point: "to부정사 ① 감정 형용사 + to부정사 (원인)",
-            options: ["to find", "finding", "found", "find"],
-            explanation: "thrilled(감정 형용사) 뒤에 감정의 원인을 나타내는 to부정사(to find)가 옵니다."
-        },
-        {
-            before: "It's an old but fascinating way", blank: "to create",
-            after: "images.",
-            ko: "그것은 이미지를 만드는 오래되었지만 매력적인 방식입니다.",
-            point: "to부정사 ② 명사 수식 to부정사 (a way to do)",
-            options: ["to create", "creating", "created", "create"],
-            explanation: "way(방법) 뒤에 to부정사가 와서 명사를 수식합니다. 'a way to do: ~하는 방법'"
-        },
-        {
-            before: "You can develop the right strategies needed", blank: "to manage",
-            after: "stress.",
-            ko: "스트레스를 관리하는 데 필요한 올바른 전략을 개발할 수 있습니다.",
-            point: "to부정사 ③ 분사 뒤 to부정사 (needed to)",
-            options: ["to manage", "managing", "managed", "manage"],
-            explanation: "needed to manage: '관리하는 데 필요한'. 분사(needed) 뒤 to부정사가 목적·용도를 나타냅니다."
-        },
-        {
-            before: "When I was 10, I started", blank: "observing",
-            after: "the sky from my window.",
-            ko: "10살 때, 나는 창문에서 하늘을 관찰하기 시작했습니다.",
-            point: "to부정사 ④ start + 동명사 (본문 표현 확인)",
-            options: ["observing", "observe", "to observing", "observed"],
-            explanation: "start + -ing / start + to부정사 둘 다 가능합니다. 본문에서는 start observing(-ing)이 쓰였습니다."
-        },
-        // ── help + 동사원형 (2개) ─────────────────────────────────
-        {
-            before: "Recognizing the cause can help you", blank: "develop",
-            after: "the right strategies needed to manage stress.",
-            ko: "원인을 인식하는 것은 올바른 전략을 개발하도록 도움이 됩니다.",
-            point: "help ① help + 목적어 + 동사원형",
-            options: ["develop", "developing", "to developing", "developed"],
-            explanation: "help + 목적어 + 동사원형(또는 to부정사): ~가 ...하도록 돕다. 동사원형(develop)을 씁니다."
-        },
-        {
-            before: "Sharing your concerns can help", blank: "relieve",
-            after: "stress.",
-            ko: "고민을 나누는 것은 스트레스를 해소하는 데 도움이 됩니다.",
-            point: "help ② help + 동사원형 (목적어 없이)",
-            options: ["relieve", "relieving", "to relieving", "relieved"],
-            explanation: "help + 동사원형(또는 to부정사): ~하는 데 도움이 되다. 동사원형(relieve)이 알맞습니다."
-        },
-        // ── 접속사 (3개) ──────────────────────────────────────────
-        {
-            before: "I enjoy the beauty of the stars", blank: "each time",
-            after: "I take out my telescope.",
-            ko: "나는 망원경을 꺼낼 때마다 별의 아름다움을 즐깁니다.",
-            point: "접속사 ① 시간 접속사 (each time: ~할 때마다)",
-            options: ["each time", "during", "despite", "by the time"],
-            explanation: "each time: ~할 때마다. 뒤에 절(주어+동사)을 이끄는 접속사입니다. during은 전치사라 절 앞에 쓸 수 없습니다."
-        },
-        {
-            before: "I really love doing blueprint photography", blank: "because",
-            after: "it's an old but fascinating way to create images.",
-            ko: "나는 청사진 사진술을 정말 좋아합니다. _____ 그것은 매력적인 방식이기 때문입니다.",
-            point: "접속사 ② 이유 접속사 (because)",
-            options: ["because", "although", "unless", "however"],
-            explanation: "because: ~이기 때문에. 이유를 나타내는 접속사입니다. however는 부사라 절을 이끌 수 없습니다."
-        },
-        {
-            before: "My parents gave me a telescope for my birthday,", blank: "so",
-            after: "I started observing the sky from my window.",
-            ko: "부모님이 생일 선물로 망원경을 주셨습니다. ___ 나는 하늘을 관찰하기 시작했습니다.",
-            point: "접속사 ③ 결과 접속사 (so: 그래서)",
-            options: ["so", "but", "because", "although"],
-            explanation: "so: 그래서(결과). 앞 문장의 결과를 나타냅니다. because는 이유절을 이끌어 앞뒤가 반대로 됩니다."
-        },
-        // ── 수동태 (2개) ──────────────────────────────────────────
-        {
-            before: "In my art class, I", blank: "was captivated",
-            after: "by the golden ratio.",
-            ko: "미술 시간에 나는 황금비에 매료되었습니다.",
-            point: "수동태 ① be동사 + 과거분사",
-            options: ["was captivated", "captivated", "have captivated", "am captivating"],
-            explanation: "수동태: be동사 + 과거분사. 주어(I)가 황금비에 의해 매료된 것이므로 수동태(was captivated)를 씁니다."
-        },
-        {
-            before: "In my art class, I was captivated", blank: "by",
-            after: "the golden ratio.",
-            ko: "미술 시간에 나는 황금비에 매료되었습니다.",
-            point: "수동태 ② 수동태 + 전치사 by",
-            options: ["by", "with", "from", "of"],
-            explanation: "수동태에서 동작의 원인·행위자 앞에는 전치사 by를 씁니다."
-        },
-        // ── 시제 (2개) ────────────────────────────────────────────
-        {
-            before: "I", blank: "enjoy",
-            after: "the beauty of the stars each time I take out my telescope.",
-            ko: "나는 망원경을 꺼낼 때마다 별의 아름다움을 즐깁니다.",
-            point: "시제 ① 현재 단순 시제 (반복·습관)",
-            options: ["enjoy", "enjoyed", "am enjoying", "have enjoyed"],
-            explanation: "each time(~할 때마다)과 함께 반복되는 습관은 현재 단순 시제(enjoy)로 나타냅니다."
-        },
-        {
-            before: "When I was 10, my parents", blank: "gave",
-            after: "me a telescope for my birthday.",
-            ko: "내가 10살 때, 부모님이 생일 선물로 망원경을 주셨습니다.",
-            point: "시제 ② 과거 시제 (시제 일치)",
-            options: ["gave", "give", "have given", "are giving"],
-            explanation: "When절에 과거 시제(was)가 있으므로 주절도 과거 시제(gave)를 씁니다."
-        },
-        // ── 분사 + 간접의문문 (2개) ───────────────────────────────
-        {
-            before: "Blueprint photography is an old but", blank: "fascinating",
-            after: "way to create images.",
-            ko: "청사진 사진술은 오래되었지만 ___ 이미지 제작 방식입니다.",
-            point: "분사 현재분사 형용사 (-ing vs -ed 구별)",
-            options: ["fascinating", "fascinated", "fascinate", "fascination"],
-            explanation: "fascinating(현재분사→형용사): 흥미롭게 만드는. 사물·상황 묘사에 씁니다. fascinated는 사람이 매료된 상태를 나타냅니다."
-        },
-        {
-            before: "I was thrilled to find", blank: "how natural objects become",
-            after: "beautiful and detailed through blueprint photography.",
-            ko: "자연물이 얼마나 아름답고 섬세해지는지 알게 되어 기뻤습니다.",
-            point: "간접의문문 의문사 + 주어 + 동사 어순",
-            options: ["how natural objects become", "how do natural objects become", "how natural objects did become", "what natural objects become"],
-            explanation: "간접의문문은 '의문사 + 주어 + 동사' 어순을 씁니다. 직접의문문(how do they become?)과 달리 조동사가 앞으로 나오지 않습니다."
-        }
-    ];
+const grammarDb1 = [
+    { before: "During the 2020 lockdown, I focused more on", blank: "stargazing", after: "and took beautiful photos of the Scottish skies.", ko: "봉쇄 기간 동안 나는 별 보기에 더 집중했습니다.", point: "동명사 ① 전치사 + 동명사", options: ["stargazing", "to stargaze", "stargaze", "stargazed"], explanation: "전치사(on) 뒤에는 반드시 동명사(-ing)가 옵니다. to부정사는 올 수 없습니다." },
+    { before: "Why don't you try", blank: "creating", after: "a to-do list and assign time for different activities?", ko: "할 일 목록을 만들어 보는 것은 어떨까요?", point: "동명사 ② try + 동명사", options: ["creating", "create", "to creating", "created"], explanation: "try + -ing: 시험 삼아 ~해 보다. try 뒤에 동명사(-ing)가 옵니다." },
+    { before: "", blank: "Recognizing", after: "the cause can help you develop the right strategies needed to manage stress.", ko: "원인을 인식하는 것은 올바른 전략을 세우는 데 도움이 됩니다.", point: "동명사 ③ 동명사 주어", options: ["Recognizing", "Recognize", "To recognizing", "Recognized"], explanation: "동사가 문장의 주어 역할을 할 때는 동명사(-ing) 형태를 씁니다. 동명사 주어는 단수 취급합니다." },
+    { before: "", blank: "Sharing", after: "your concerns and asking for advice from others can help relieve stress.", ko: "고민을 나누는 것은 스트레스 해소에 도움이 됩니다.", point: "동명사 ④ 동명사 주어 (and로 연결)", options: ["Sharing", "Share", "Shared", "To sharing"], explanation: "Sharing ... and asking ...이 함께 주어 역할을 합니다. 동명사로 시작하는 주어는 단수 취급합니다." },
+    { before: "I really love", blank: "doing", after: "blueprint photography because it's a fascinating way to create images.", ko: "나는 청사진 사진술 하는 것을 정말 좋아합니다.", point: "동명사 ⑤ love + 동명사 (목적어)", options: ["doing", "do", "to doing", "done"], explanation: "love + -ing: ~하는 것을 좋아하다. 이 문장은 동명사(doing)를 목적어로 씁니다." },
+    { before: "Sharing your concerns and asking", blank: "for", after: "advice or comfort from others can help relieve stress.", ko: "다른 사람에게 조언이나 위로를 구하는 것은 스트레스 해소에 도움이 됩니다.", point: "동명사 ⑥ 동명사 + 전치사 (ask for)", options: ["for", "of", "to", "about"], explanation: "ask for: ~을 요청하다/구하다. 동명사(asking) 뒤에 오는 전치사는 for입니다." },
+    { before: "I was thrilled", blank: "to find", after: "how natural objects become beautiful through blueprint photography.", ko: "자연물이 얼마나 아름다워지는지 알게 되어 매우 기뻤습니다.", point: "to부정사 ① 감정 형용사 + to부정사 (원인)", options: ["to find", "finding", "found", "find"], explanation: "thrilled(감정 형용사) 뒤에 감정의 원인을 나타내는 to부정사(to find)가 옵니다." },
+    { before: "It's an old but fascinating way", blank: "to create", after: "images.", ko: "그것은 이미지를 만드는 오래되었지만 매력적인 방식입니다.", point: "to부정사 ② 명사 수식 to부정사 (a way to do)", options: ["to create", "creating", "created", "create"], explanation: "way(방법) 뒤에 to부정사가 와서 명사를 수식합니다. 'a way to do: ~하는 방법'" },
+    { before: "You can develop the right strategies needed", blank: "to manage", after: "stress.", ko: "스트레스를 관리하는 데 필요한 올바른 전략을 개발할 수 있습니다.", point: "to부정사 ③ 분사 뒤 to부정사 (needed to)", options: ["to manage", "managing", "managed", "manage"], explanation: "needed to manage: '관리하는 데 필요한'. 분사(needed) 뒤 to부정사가 목적·용도를 나타냅니다." },
+    { before: "When I was 10, I started", blank: "observing", after: "the sky from my window.", ko: "10살 때, 나는 창문에서 하늘을 관찰하기 시작했습니다.", point: "to부정사 ④ start + 동명사 (본문 표현)", options: ["observing", "observe", "to observing", "observed"], explanation: "start + -ing / start + to부정사 둘 다 가능합니다. 본문에서는 start observing(-ing)이 쓰였습니다." },
+    { before: "Recognizing the cause can help you", blank: "develop", after: "the right strategies needed to manage stress.", ko: "원인을 인식하는 것은 올바른 전략을 개발하도록 도움이 됩니다.", point: "help ① help + 목적어 + 동사원형", options: ["develop", "developing", "to developing", "developed"], explanation: "help + 목적어 + 동사원형(또는 to부정사): ~가 ...하도록 돕다. 동사원형(develop)을 씁니다." },
+    { before: "Sharing your concerns can help", blank: "relieve", after: "stress.", ko: "고민을 나누는 것은 스트레스를 해소하는 데 도움이 됩니다.", point: "help ② help + 동사원형 (목적어 없이)", options: ["relieve", "relieving", "to relieving", "relieved"], explanation: "help + 동사원형(또는 to부정사): ~하는 데 도움이 되다. 동사원형(relieve)이 알맞습니다." },
+    { before: "I enjoy the beauty of the stars", blank: "each time", after: "I take out my telescope.", ko: "나는 망원경을 꺼낼 때마다 별의 아름다움을 즐깁니다.", point: "접속사 ① 시간 접속사 (each time: ~할 때마다)", options: ["each time", "during", "despite", "by the time"], explanation: "each time: ~할 때마다. 뒤에 절(주어+동사)을 이끄는 접속사입니다. during은 전치사라 절 앞에 쓸 수 없습니다." },
+    { before: "I really love doing blueprint photography", blank: "because", after: "it's an old but fascinating way to create images.", ko: "나는 청사진 사진술을 정말 좋아합니다. 그것은 매력적인 방식이기 때문입니다.", point: "접속사 ② 이유 접속사 (because)", options: ["because", "although", "unless", "however"], explanation: "because: ~이기 때문에. 이유를 나타내는 접속사입니다. however는 부사라 절을 이끌 수 없습니다." },
+    { before: "My parents gave me a telescope for my birthday,", blank: "so", after: "I started observing the sky from my window.", ko: "부모님이 생일 선물로 망원경을 주셨습니다. ___ 나는 하늘을 관찰하기 시작했습니다.", point: "접속사 ③ 결과 접속사 (so: 그래서)", options: ["so", "but", "because", "although"], explanation: "so: 그래서(결과). 앞 문장의 결과를 나타냅니다. because는 이유절을 이끌어 앞뒤가 반대로 됩니다." },
+    { before: "In my art class, I", blank: "was captivated", after: "by the golden ratio.", ko: "미술 시간에 나는 황금비에 매료되었습니다.", point: "수동태 ① be동사 + 과거분사", options: ["was captivated", "captivated", "have captivated", "am captivating"], explanation: "수동태: be동사 + 과거분사. 주어(I)가 황금비에 의해 매료된 것이므로 수동태(was captivated)를 씁니다." },
+    { before: "In my art class, I was captivated", blank: "by", after: "the golden ratio.", ko: "미술 시간에 나는 황금비에 매료되었습니다.", point: "수동태 ② 수동태 + 전치사 by", options: ["by", "with", "from", "of"], explanation: "수동태에서 동작의 원인·행위자 앞에는 전치사 by를 씁니다." },
+    { before: "I", blank: "enjoy", after: "the beauty of the stars each time I take out my telescope.", ko: "나는 망원경을 꺼낼 때마다 별의 아름다움을 즐깁니다.", point: "시제 ① 현재 단순 시제 (반복·습관)", options: ["enjoy", "enjoyed", "am enjoying", "have enjoyed"], explanation: "each time(~할 때마다)과 함께 반복되는 습관은 현재 단순 시제(enjoy)로 나타냅니다." },
+    { before: "When I was 10, my parents", blank: "gave", after: "me a telescope for my birthday.", ko: "내가 10살 때, 부모님이 생일 선물로 망원경을 주셨습니다.", point: "시제 ② 과거 시제 (시제 일치)", options: ["gave", "give", "have given", "are giving"], explanation: "When절에 과거 시제(was)가 있으므로 주절도 과거 시제(gave)를 씁니다." },
+    { before: "Blueprint photography is an old but", blank: "fascinating", after: "way to create images.", ko: "청사진 사진술은 오래되었지만 ___ 이미지 제작 방식입니다.", point: "분사 현재분사 형용사 (-ing vs -ed)", options: ["fascinating", "fascinated", "fascinate", "fascination"], explanation: "fascinating(현재분사→형용사): 흥미롭게 만드는. 사물 묘사에 씁니다. fascinated는 사람이 매료된 상태입니다." },
+    { before: "I was thrilled to find", blank: "how natural objects become", after: "beautiful and detailed through blueprint photography.", ko: "자연물이 얼마나 아름답고 섬세해지는지 알게 되어 기뻤습니다.", point: "간접의문문 의문사 + 주어 + 동사 어순", options: ["how natural objects become", "how do natural objects become", "how natural objects did become", "what natural objects become"], explanation: "간접의문문은 '의문사 + 주어 + 동사' 어순을 씁니다. 직접의문문과 달리 조동사가 앞으로 나오지 않습니다." }
+];
 
-    let currentMode = 'unscramble';
-    let currentIndex = 0;
-    let selectedMcqAnswer = null;
-    let unscrambleWords = [];
-    let originalWords = [];
-    let lastSpokenText = '';
-    let shuffledIndices = [];
-    let cyclePos = 0;
+// ── 2단원 데이터 (아래 문장을 실제 교과서 문장으로 교체하세요) ────────────
+const db2 = [
+    { en: "Climate change is one of the most serious challenges facing our planet today.", ko: "기후 변화는 오늘날 우리 지구가 직면한 가장 심각한 문제 중 하나입니다." },
+    { en: "Technology has changed the way we communicate with each other.", ko: "기술은 우리가 서로 소통하는 방식을 바꾸어 놓았습니다." },
+    { en: "Volunteering is a great way to give back to your community.", ko: "자원봉사는 지역 사회에 기여하는 훌륭한 방법입니다." },
+    { en: "Reading books regularly can expand your vocabulary and improve your writing skills.", ko: "정기적으로 책을 읽는 것은 어휘를 늘리고 글쓰기 실력을 향상시킬 수 있습니다." },
+    { en: "We should reduce the amount of plastic we use to protect the environment.", ko: "환경을 보호하기 위해 우리는 플라스틱 사용량을 줄여야 합니다." },
+    { en: "Artificial intelligence is transforming many industries around the world.", ko: "인공지능은 전 세계 많은 산업을 변화시키고 있습니다." },
+    { en: "It is important to respect other cultures and learn from their traditions.", ko: "다른 문화를 존중하고 그들의 전통에서 배우는 것이 중요합니다." },
+    { en: "Regular exercise and a healthy diet are essential for maintaining good health.", ko: "규칙적인 운동과 건강한 식단은 좋은 건강을 유지하는 데 필수적입니다." },
+    { en: "Social media allows people to connect with others from around the world.", ko: "소셜 미디어는 사람들이 전 세계의 다른 사람들과 연결할 수 있게 해줍니다." },
+    { en: "Learning a second language opens up new opportunities in your personal and professional life.", ko: "제2외국어를 배우는 것은 개인적·직업적 삶에서 새로운 기회를 열어줍니다." }
+];
 
-    function shuffle(array) {
-        return array.sort(() => Math.random() - 0.5);
-    }
+const grammarDb2 = [
+    { before: "Climate change is one of the most serious challenges", blank: "facing", after: "our planet today.", ko: "기후 변화는 오늘날 우리 지구가 직면하고 있는 가장 심각한 문제입니다.", point: "분사 현재분사의 명사 수식 (challenges facing...)", options: ["facing", "faced", "to face", "face"], explanation: "현재분사(facing)가 명사(challenges) 뒤에서 수식합니다. 'challenges facing our planet: 지구가 직면하고 있는 도전들'" },
+    { before: "Technology has", blank: "changed", after: "the way we communicate with each other.", ko: "기술은 우리가 소통하는 방식을 바꾸어 놓았습니다.", point: "시제 현재완료 (have/has + 과거분사)", options: ["changed", "change", "changing", "changes"], explanation: "현재완료(has changed): 과거부터 현재까지 영향을 미치는 변화를 나타냅니다." },
+    { before: "", blank: "Volunteering", after: "is a great way to give back to your community.", ko: "자원봉사 하는 것은 지역 사회에 기여하는 훌륭한 방법입니다.", point: "동명사 주어", options: ["Volunteering", "Volunteer", "To volunteering", "Volunteered"], explanation: "동명사(Volunteering)가 주어 역할을 합니다. 동명사 주어는 단수 취급합니다." },
+    { before: "Reading books regularly can", blank: "expand", after: "your vocabulary and improve your writing skills.", ko: "정기적으로 책을 읽는 것은 어휘를 늘릴 수 있습니다.", point: "조동사 + 동사원형 (can + 원형)", options: ["expand", "expanding", "to expand", "expanded"], explanation: "조동사(can) 뒤에는 반드시 동사원형이 옵니다." },
+    { before: "We should reduce the amount of plastic we", blank: "use", after: "to protect the environment.", ko: "환경을 보호하기 위해 우리는 사용하는 플라스틱의 양을 줄여야 합니다.", point: "관계절 (목적격 관계대명사 생략)", options: ["use", "using", "used", "to use"], explanation: "목적격 관계대명사(that/which)가 생략된 관계절입니다. 'plastic (that) we use: 우리가 사용하는 플라스틱'" },
+    { before: "Artificial intelligence is", blank: "transforming", after: "many industries around the world.", ko: "인공지능은 전 세계 많은 산업을 변화시키고 있습니다.", point: "현재진행 시제 (be + -ing)", options: ["transforming", "transformed", "transform", "to transform"], explanation: "현재진행(is + -ing): 지금 진행 중인 변화를 나타냅니다." },
+    { before: "It is important", blank: "to respect", after: "other cultures and learn from their traditions.", ko: "다른 문화를 존중하는 것은 중요합니다.", point: "가주어 It ~ 진주어 to부정사", options: ["to respect", "respecting", "respect", "respected"], explanation: "It is + 형용사 + to부정사: It은 가주어, to respect가 진주어입니다. 'It is important to do: ~하는 것은 중요하다'" },
+    { before: "Regular exercise and a healthy diet are essential for", blank: "maintaining", after: "good health.", ko: "규칙적인 운동과 건강한 식단은 건강을 유지하는 데 필수적입니다.", point: "전치사 + 동명사 (for + -ing)", options: ["maintaining", "to maintain", "maintain", "maintained"], explanation: "전치사(for) 뒤에는 동명사(-ing)가 옵니다. 'essential for maintaining: 유지하는 데 필수적인'" },
+    { before: "Social media allows people", blank: "to connect", after: "with others from around the world.", ko: "소셜 미디어는 사람들이 다른 사람들과 연결할 수 있게 해줍니다.", point: "allow + 목적어 + to부정사", options: ["to connect", "connecting", "connect", "connected"], explanation: "allow + 목적어 + to부정사: ~가 ...하도록 허용하다. 'allows people to connect'가 올바른 형태입니다." },
+    { before: "", blank: "Learning", after: "a second language opens up new opportunities in your personal and professional life.", ko: "제2외국어를 배우는 것은 새로운 기회를 열어줍니다.", point: "동명사 주어 + 단수 동사", options: ["Learning", "Learn", "To learning", "Learned"], explanation: "Learning(동명사)이 주어 역할을 합니다. 동명사 주어는 단수로 취급하여 opens(3인칭 단수)를 씁니다." }
+];
 
-    function initCycle() {
-        const len = currentMode === 'grammar' ? grammarDb.length : db.length;
-        shuffledIndices = shuffle([...Array(len).keys()]);
-        cyclePos = 0;
-        currentIndex = shuffledIndices[0];
-    }
+const units = [
+    { label: '1단원', db: db1, grammarDb: grammarDb1 },
+    { label: '2단원', db: db2, grammarDb: grammarDb2 }
+];
 
-    function setMode(mode, btn) {
-        currentMode = mode;
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-        initCycle();
-        loadQuestion();
-    }
+// ── 상태 변수 ─────────────────────────────────────────────────────────────────
+let currentUnit = 0;
+let currentMode = 'unscramble';
+let currentIndex = 0;
+let selectedMcqAnswer = null;
+let lastSpokenText = '';
+let shuffledIndices = [];
+let cyclePos = 0;
 
-    function loadQuestion() {
-        const gameArea = document.getElementById('game-area');
-        document.getElementById('feedback').innerText = '';
-        document.getElementById('next-btn').style.display = 'none';
-        document.getElementById('replay-btn').style.display = 'none';
-        document.getElementById('check-btn').style.display = 'block';
-        document.getElementById('check-btn').disabled = false;
+// 점수
+let scoreCorrect = 0;
+let scoreTotal = 0;
 
-        if (currentMode === 'unscramble') {
-            const data = db[currentIndex];
-            originalWords = data.en.split(' ');
-            unscrambleWords = shuffle([...originalWords]);
-            gameArea.innerHTML = `
-                <div class="ko-hint">${data.ko}</div>
-                <div class="drop-zone" id="drop-zone" onclick="moveToBank(event)"></div>
-                <div class="word-bank" id="word-bank" onclick="moveToDropZone(event)">
-                    ${unscrambleWords.map((w, i) => `<div class="word-chip" data-id="${i}">${w}</div>`).join('')}
-                </div>
-            `;
-        } else if (currentMode === 'mcq') {
-            const data = db[currentIndex];
-            const wrongOptions = shuffle(db.filter((_, i) => i !== currentIndex)).slice(0, 3).map(d => d.en);
-            const options = shuffle([data.en, ...wrongOptions]);
-            selectedMcqAnswer = null;
-            gameArea.innerHTML = `
-                <div class="question-box">${data.ko}</div>
-                <div class="mcq-options">
-                    ${options.map(opt => `
-                        <button class="mcq-option" onclick="selectMcq(this, '${opt.replace(/'/g, "\\'")}')">${opt}</button>
-                    `).join('')}
-                </div>
-            `;
-        } else {
-            const g = grammarDb[currentIndex];
-            const opts = shuffle([...g.options]);
-            selectedMcqAnswer = null;
-            gameArea.innerHTML = `
-                <div class="grammar-sentence">
-                    ${g.before ? g.before + ' ' : ''}<span class="blank" id="blank-display">___</span>${g.after ? ' ' + g.after : ''}
-                </div>
-                <div class="grammar-ko">${g.ko}</div>
-                <div class="grammar-point">${g.point}</div>
-                <div class="mcq-options">
-                    ${opts.map(opt => `
-                        <button class="mcq-option" onclick="selectMcq(this, '${opt.replace(/'/g, "\\'")}')">${opt}</button>
-                    `).join('')}
-                </div>
-            `;
-        }
-    }
+// 오답 노트
+let wrongList = [];   // { unit, mode, index }
+let wrongPos = 0;
 
-    function moveToDropZone(e) {
-        if (e.target.classList.contains('word-chip')) {
-            document.getElementById('drop-zone').appendChild(e.target);
-        }
-    }
+// 타이머
+let timerOn = false;
+let timerRemaining = 20;
+let timerInterval = null;
+const TIMER_SEC = 20;
+let timerExpired = false;
 
-    function moveToBank(e) {
-        if (e.target.classList.contains('word-chip')) {
-            document.getElementById('word-bank').appendChild(e.target);
-        }
-    }
+// ── 유틸 ─────────────────────────────────────────────────────────────────────
+function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
+function getDb()  { return units[currentUnit].db; }
+function getGdb() { return units[currentUnit].grammarDb; }
 
-    function selectMcq(btn, text) {
-        document.querySelectorAll('.mcq-option').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        selectedMcqAnswer = text;
-    }
-
-    function checkAnswer() {
-        const feedback = document.getElementById('feedback');
-        let isCorrect = false;
-        let speakText = '';
-
-        if (currentMode === 'unscramble') {
-            const data = db[currentIndex];
-            const currentSentence = Array.from(document.getElementById('drop-zone').children).map(c => c.innerText).join(' ');
-            isCorrect = (currentSentence === data.en);
-            speakText = data.en;
-        } else if (currentMode === 'mcq') {
-            const data = db[currentIndex];
-            if (!selectedMcqAnswer) return alert('답을 선택해주세요.');
-            isCorrect = (selectedMcqAnswer === data.en);
-            speakText = data.en;
-        } else {
-            const g = grammarDb[currentIndex];
-            if (!selectedMcqAnswer) return alert('답을 선택해주세요.');
-            isCorrect = (selectedMcqAnswer === g.blank);
-            speakText = (g.before ? g.before + ' ' : '') + g.blank + (g.after ? ' ' + g.after : '');
-            const blankEl = document.getElementById('blank-display');
-            if (blankEl) blankEl.textContent = g.blank;
-            const expArea = document.getElementById('game-area');
-            const expDiv = document.createElement('div');
-            expDiv.className = 'explanation';
-            expDiv.textContent = '💡 ' + g.explanation;
-            expArea.appendChild(expDiv);
-        }
-
-        document.getElementById('check-btn').style.display = 'none';
-        document.getElementById('replay-btn').style.display = 'block';
-        document.getElementById('next-btn').style.display = 'block';
-
-        if (isCorrect) {
-            feedback.innerHTML = '<span class="correct">정답입니다! 🎉</span>';
-        } else {
-            const g = currentMode === 'grammar' ? grammarDb[currentIndex] : null;
-            const correctLabel = g ? `정답: <b>${g.blank}</b>` : `정답은:<br>${db[currentIndex].en}`;
-            feedback.innerHTML = `<span class="incorrect">틀렸습니다. ${correctLabel}</span>`;
-        }
-
-        lastSpokenText = speakText;
-        speakEnglish(speakText);
-    }
-
-    function replayTTS() {
-        if (lastSpokenText) speakEnglish(lastSpokenText);
-    }
-
-    function nextQuestion() {
-        cyclePos++;
-        if (cyclePos >= shuffledIndices.length) {
-            initCycle();
-        } else {
-            currentIndex = shuffledIndices[cyclePos];
-        }
-        loadQuestion();
-    }
-
-    function speakEnglish(text) {
-        speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = 'en-US';
-        utter.rate = 0.85;
-        utter.pitch = 1;
-
-        const speak = () => {
-            const voices = speechSynthesis.getVoices();
-            const pick =
-                voices.find(v => v.name === 'Samantha') ||
-                voices.find(v => v.name === 'Alex') ||
-                voices.find(v => v.lang === 'en-US' && v.localService) ||
-                voices.find(v => v.lang.startsWith('en-'));
-            if (pick) utter.voice = pick;
-            speechSynthesis.speak(utter);
-        };
-
-        // iOS는 voices를 비동기로 로드하므로 준비될 때까지 대기
-        if (speechSynthesis.getVoices().length > 0) {
-            speak();
-        } else {
-            speechSynthesis.addEventListener('voiceschanged', speak, { once: true });
-        }
-    }
-
+// ── 단원 전환 ─────────────────────────────────────────────────────────────────
+function setUnit(index, btn) {
+    currentUnit = index;
+    document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    resetScore();
     initCycle();
     loadQuestion();
+}
+
+// ── 모드 전환 ─────────────────────────────────────────────────────────────────
+function setMode(mode, btn) {
+    currentMode = mode;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    if (mode !== 'wrong') { resetScore(); initCycle(); }
+    else { wrongPos = 0; }
+    loadQuestion();
+}
+
+// ── 점수 ─────────────────────────────────────────────────────────────────────
+function resetScore() { scoreCorrect = 0; scoreTotal = 0; updateScoreDisplay(); }
+
+function updateScore(isCorrect) {
+    scoreTotal++;
+    if (isCorrect) scoreCorrect++;
+    updateScoreDisplay();
+}
+
+function updateScoreDisplay() {
+    document.getElementById('score-display').textContent = `✓ ${scoreCorrect} / ${scoreTotal} 문제`;
+    const rateEl = document.getElementById('rate-display');
+    if (scoreTotal === 0) { rateEl.textContent = '정답률 -'; rateEl.className = 'rate'; return; }
+    const pct = Math.round(scoreCorrect / scoreTotal * 100);
+    rateEl.textContent = `정답률 ${pct}%`;
+    rateEl.className = 'rate ' + (pct >= 70 ? 'rate-good' : pct >= 40 ? 'rate-mid' : 'rate-bad');
+}
+
+// ── 오답 노트 ─────────────────────────────────────────────────────────────────
+function addWrong(mode, index) {
+    const dup = wrongList.some(w => w.unit === currentUnit && w.mode === mode && w.index === index);
+    if (!dup) wrongList.push({ unit: currentUnit, mode, index });
+    updateWrongTab();
+}
+
+function removeWrong(entry) {
+    const i = wrongList.indexOf(entry);
+    if (i !== -1) wrongList.splice(i, 1);
+    updateWrongTab();
+}
+
+function updateWrongTab() {
+    const tab = document.getElementById('wrong-tab');
+    document.getElementById('wrong-count').textContent = wrongList.length;
+    tab.style.display = wrongList.length > 0 ? '' : 'none';
+}
+
+// ── 사이클 / 문제 로드 ────────────────────────────────────────────────────────
+function initCycle() {
+    const len = currentMode === 'grammar' ? getGdb().length : getDb().length;
+    shuffledIndices = shuffle([...Array(len).keys()]);
+    cyclePos = 0;
+    currentIndex = shuffledIndices[0];
+}
+
+function loadQuestion() {
+    stopTimer();
+    const area = document.getElementById('game-area');
+    document.getElementById('feedback').textContent = '';
+    document.getElementById('next-btn').style.display = 'none';
+    document.getElementById('replay-btn').style.display = 'none';
+    document.getElementById('check-btn').style.display = 'block';
+    selectedMcqAnswer = null;
+
+    if (currentMode === 'wrong') { loadWrongQ(area); }
+    else { renderQ(area, currentMode, currentUnit, currentIndex); }
+
+    if (timerOn && document.getElementById('check-btn').style.display !== 'none') startTimer();
+}
+
+function renderQ(area, mode, unitIdx, idx) {
+    const db  = units[unitIdx].db;
+    const gdb = units[unitIdx].grammarDb;
+
+    if (mode === 'unscramble') {
+        const d = db[idx];
+        const words = shuffle([...d.en.split(' ')]);
+        area.innerHTML = `
+            <div class="ko-hint">${d.ko}</div>
+            <div class="drop-zone" id="drop-zone" onclick="moveToBank(event)"></div>
+            <div class="word-bank" id="word-bank" onclick="moveToDropZone(event)">
+                ${words.map((w,i) => `<div class="word-chip" data-id="${i}">${w}</div>`).join('')}
+            </div>`;
+    } else if (mode === 'mcq') {
+        const d = db[idx];
+        const opts = shuffle([d.en, ...shuffle(db.filter((_,i) => i !== idx)).slice(0,3).map(x => x.en)]);
+        area.innerHTML = `
+            <div class="question-box">${d.ko}</div>
+            <div class="mcq-options">
+                ${opts.map(o => `<button class="mcq-option" onclick="selectMcq(this,'${o.replace(/'/g,"\\'")}')">${o}</button>`).join('')}
+            </div>`;
+    } else if (mode === 'grammar') {
+        const g = gdb[idx];
+        const opts = shuffle([...g.options]);
+        area.innerHTML = `
+            <div class="grammar-sentence">${g.before ? g.before+' ' : ''}<span class="blank" id="blank-display">___</span>${g.after ? ' '+g.after : ''}</div>
+            <div class="grammar-ko">${g.ko}</div>
+            <div class="grammar-point">${g.point}</div>
+            <div class="mcq-options">
+                ${opts.map(o => `<button class="mcq-option" onclick="selectMcq(this,'${o.replace(/'/g,"\\'")}')">${o}</button>`).join('')}
+            </div>`;
+    }
+}
+
+function loadWrongQ(area) {
+    if (wrongList.length === 0) {
+        area.innerHTML = `<div class="empty-state"><div class="emoji">🎉</div><div><b>오답 노트 완료!</b><br>모든 오답 문제를 맞혔습니다.</div></div>`;
+        document.getElementById('check-btn').style.display = 'none';
+        return;
+    }
+    wrongPos = Math.min(wrongPos, wrongList.length - 1);
+    const e = wrongList[wrongPos];
+    renderQ(area, e.mode, e.unit, e.index);
+}
+
+// ── 이벤트 ────────────────────────────────────────────────────────────────────
+function moveToDropZone(ev) { if (ev.target.classList.contains('word-chip')) document.getElementById('drop-zone').appendChild(ev.target); }
+function moveToBank(ev)      { if (ev.target.classList.contains('word-chip')) document.getElementById('word-bank').appendChild(ev.target); }
+function selectMcq(btn, text) { document.querySelectorAll('.mcq-option').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); selectedMcqAnswer = text; }
+
+function checkAnswer() {
+    stopTimer();
+    const fb = document.getElementById('feedback');
+    let isCorrect = false;
+    let speakText = '';
+
+    const entry    = currentMode === 'wrong' ? wrongList[wrongPos] : null;
+    const rMode    = entry ? entry.mode : currentMode;
+    const uIdx     = entry ? entry.unit : currentUnit;
+    const qIdx     = entry ? entry.index : currentIndex;
+    const db       = units[uIdx].db;
+    const gdb      = units[uIdx].grammarDb;
+
+    if (rMode === 'unscramble') {
+        const d = db[qIdx];
+        const ans = Array.from(document.getElementById('drop-zone').children).map(c => c.innerText).join(' ');
+        isCorrect = ans === d.en;
+        speakText = d.en;
+    } else if (rMode === 'mcq') {
+        if (!selectedMcqAnswer && !timerExpired) return alert('답을 선택해주세요.');
+        const d = db[qIdx];
+        isCorrect = selectedMcqAnswer === d.en;
+        speakText = d.en;
+    } else if (rMode === 'grammar') {
+        if (!selectedMcqAnswer && !timerExpired) return alert('답을 선택해주세요.');
+        const g = gdb[qIdx];
+        isCorrect = selectedMcqAnswer === g.blank;
+        speakText = (g.before ? g.before+' ' : '') + g.blank + (g.after ? ' '+g.after : '');
+        const blankEl = document.getElementById('blank-display');
+        if (blankEl) blankEl.textContent = g.blank;
+        if (selectedMcqAnswer !== null) {
+            const exp = document.createElement('div');
+            exp.className = 'explanation';
+            exp.textContent = '💡 ' + g.explanation;
+            document.getElementById('game-area').appendChild(exp);
+        }
+    }
+
+    updateScore(isCorrect);
+
+    if (currentMode !== 'wrong') {
+        if (!isCorrect) addWrong(currentMode, currentIndex);
+    } else {
+        if (isCorrect) removeWrong(entry);
+    }
+
+    document.getElementById('check-btn').style.display = 'none';
+    document.getElementById('replay-btn').style.display = 'block';
+    document.getElementById('next-btn').style.display = 'block';
+
+    const prefix = timerExpired ? '⏰ 시간 초과! ' : '틀렸습니다. ';
+    if (isCorrect) {
+        fb.innerHTML = '<span class="correct">정답입니다! 🎉</span>';
+    } else if (rMode === 'grammar') {
+        fb.innerHTML = `<span class="incorrect">${prefix}정답: <b>${gdb[qIdx].blank}</b></span>`;
+    } else {
+        fb.innerHTML = `<span class="incorrect">${prefix}정답은:<br>${db[qIdx].en}</span>`;
+    }
+
+    lastSpokenText = speakText;
+    speakEnglish(speakText);
+    timerExpired = false;
+}
+
+function nextQuestion() {
+    if (currentMode === 'wrong') {
+        if (wrongList.length === 0) { loadQuestion(); return; }
+        wrongPos = (wrongPos + 1) % wrongList.length;
+        loadQuestion();
+        return;
+    }
+    cyclePos++;
+    if (cyclePos >= shuffledIndices.length) initCycle();
+    else currentIndex = shuffledIndices[cyclePos];
+    loadQuestion();
+}
+
+// ── 타이머 ────────────────────────────────────────────────────────────────────
+function toggleTimer() {
+    timerOn = !timerOn;
+    const btn  = document.getElementById('timer-btn');
+    const wrap = document.getElementById('timer-wrap');
+    btn.textContent = timerOn ? '⏱️ 타이머 켜짐' : '⏱️ 타이머 꺼짐';
+    btn.classList.toggle('on', timerOn);
+    wrap.style.display = timerOn ? 'flex' : 'none';
+    if (timerOn) startTimer(); else stopTimer();
+}
+
+function startTimer() {
+    stopTimer();
+    timerRemaining = TIMER_SEC;
+    timerExpired = false;
+    updateTimerUI();
+    timerInterval = setInterval(() => {
+        timerRemaining--;
+        updateTimerUI();
+        if (timerRemaining <= 0) {
+            stopTimer();
+            timerExpired = true;
+            checkAnswer();
+        }
+    }, 1000);
+}
+
+function stopTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+}
+
+function updateTimerUI() {
+    document.getElementById('timer-text').textContent = timerRemaining;
+    const pct  = (timerRemaining / TIMER_SEC) * 100;
+    const fill = document.getElementById('timer-fill');
+    fill.style.width = pct + '%';
+    fill.style.background = pct > 50 ? '#10B981' : pct > 25 ? '#F59E0B' : '#EF4444';
+}
+
+// ── TTS ──────────────────────────────────────────────────────────────────────
+function replayTTS() { if (lastSpokenText) speakEnglish(lastSpokenText); }
+
+function speakEnglish(text) {
+    speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US'; utter.rate = 0.85; utter.pitch = 1;
+    const speak = () => {
+        const voices = speechSynthesis.getVoices();
+        const pick = voices.find(v => v.name === 'Samantha') ||
+                     voices.find(v => v.name === 'Alex') ||
+                     voices.find(v => v.lang === 'en-US' && v.localService) ||
+                     voices.find(v => v.lang.startsWith('en-'));
+        if (pick) utter.voice = pick;
+        speechSynthesis.speak(utter);
+    };
+    speechSynthesis.getVoices().length > 0 ? speak()
+        : speechSynthesis.addEventListener('voiceschanged', speak, { once: true });
+}
+
+// ── 초기화 ────────────────────────────────────────────────────────────────────
+initCycle();
+loadQuestion();
 </script>
 </body>
 </html>
