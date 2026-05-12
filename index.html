@@ -271,7 +271,7 @@ function updateWrongTab() {
 // ── 사이클 / 문제 로드 ────────────────────────────────────────────────────────
 function initCycle() {
     const len = currentMode === 'grammar' ? getGdb().length : getDb().length;
-    shuffledIndices = shuffle([...Array(len).keys()]);
+    shuffledIndices = [...Array(len).keys()];
     cyclePos = 0;
     currentIndex = shuffledIndices[0];
 }
