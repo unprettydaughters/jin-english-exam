@@ -61,6 +61,11 @@
         .grammar-point { font-size: 0.82rem; color: #9CA3AF; margin-bottom: 14px; }
         .explanation { margin-top: 10px; font-size: 0.88rem; color: #374151; background: #F3F4F6; border-radius: 8px; padding: 10px 14px; }
 
+        /* 영작 */
+        .composition-ko { font-size: 1.15rem; font-weight: 500; margin-bottom: 16px; line-height: 1.7; }
+        .composition-input { width: 100%; box-sizing: border-box; padding: 14px; font-size: 1rem; border: 2px solid #D1D5DB; border-radius: 8px; min-height: 80px; resize: vertical; font-family: inherit; transition: border-color 0.2s; }
+        .composition-input:focus { outline: none; border-color: var(--primary); }
+
         /* 오답 노트 완료 */
         .empty-state { text-align: center; padding: 40px; color: #6B7280; line-height: 2; }
         .empty-state .emoji { font-size: 2.5rem; }
@@ -97,6 +102,7 @@
         <button class="tab active" onclick="setMode('unscramble', this)">문장 순서 맞추기</button>
         <button class="tab" onclick="setMode('mcq', this)">4지 선다 영작</button>
         <button class="tab" onclick="setMode('grammar', this)">영문법 문제</button>
+        <button class="tab" onclick="setMode('composition', this)">영작</button>
         <button class="tab wrong-tab" id="wrong-tab" onclick="setMode('wrong', this)" style="display:none">오답 노트 (<span id="wrong-count">0</span>)</button>
     </div>
 
@@ -277,6 +283,7 @@ let timerRemaining = 20;
 let timerInterval = null;
 const TIMER_SEC = 20;
 const TIMER_SEC_UNSCRAMBLE = 30;
+const TIMER_SEC_COMPOSITION = 60;
 let timerExpired = false;
 
 // ── 유틸 ─────────────────────────────────────────────────────────────────────
@@ -395,6 +402,14 @@ function renderQ(area, mode, unitIdx, idx) {
             <div class="mcq-options">
                 ${opts.map(o => `<button class="mcq-option" onclick="selectMcq(this,'${o.replace(/'/g,"\\'")}')">${o}</button>`).join('')}
             </div>`;
+    } else if (mode === 'composition') {
+        const d = db[idx];
+        area.innerHTML = `
+            <div class="composition-ko">${d.ko}</div>
+            <textarea class="composition-input" id="comp-input"
+                placeholder="영어 문장을 입력하세요..."
+                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>`;
+        setTimeout(() => { const el = document.getElementById('comp-input'); if (el) el.focus(); }, 50);
     }
 }
 
@@ -437,6 +452,14 @@ function checkAnswer() {
         if (!selectedMcqAnswer && !timerExpired) return alert('답을 선택해주세요.');
         const d = db[qIdx];
         isCorrect = selectedMcqAnswer === d.en;
+        speakText = d.en;
+    } else if (rMode === 'composition') {
+        const inp = document.getElementById('comp-input');
+        const typed = inp ? inp.value : '';
+        if (!typed.trim() && !timerExpired) return alert('문장을 입력해주세요.');
+        const d = db[qIdx];
+        const normComp = s => s.trim().replace(/\s+/g, ' ').replace(/[.!?]$/, '').toLowerCase();
+        isCorrect = normComp(typed) === normComp(d.en);
         speakText = d.en;
     } else if (rMode === 'grammar') {
         if (!selectedMcqAnswer && !timerExpired) return alert('답을 선택해주세요.');
@@ -505,7 +528,9 @@ function toggleTimer() {
 
 function startTimer() {
     stopTimer();
-    timerRemaining = currentMode === 'unscramble' ? TIMER_SEC_UNSCRAMBLE : TIMER_SEC;
+    timerRemaining = currentMode === 'unscramble' ? TIMER_SEC_UNSCRAMBLE
+                   : currentMode === 'composition' ? TIMER_SEC_COMPOSITION
+                   : TIMER_SEC;
     timerExpired = false;
     updateTimerUI();
     timerInterval = setInterval(() => {
@@ -525,7 +550,9 @@ function stopTimer() {
 
 function updateTimerUI() {
     document.getElementById('timer-text').textContent = timerRemaining;
-    const maxSec = currentMode === 'unscramble' ? TIMER_SEC_UNSCRAMBLE : TIMER_SEC;
+    const maxSec = currentMode === 'unscramble' ? TIMER_SEC_UNSCRAMBLE
+                 : currentMode === 'composition' ? TIMER_SEC_COMPOSITION
+                 : TIMER_SEC;
     const pct  = (timerRemaining / maxSec) * 100;
     const fill = document.getElementById('timer-fill');
     fill.style.width = pct + '%';
